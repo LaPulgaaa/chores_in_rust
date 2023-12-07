@@ -8,14 +8,15 @@ fn main() {
 #[command(name="to do list")]
 #[command(author,version,about)]
 struct Task{
-    #[arg(long)]
+    ///enter title
     title:String,
-    #[arg(long)]
+    ///enter discription of the title
     discription:String,
-    #[arg(long)]
-    deadline:DateTime<Local>
+
 }
 fn add_task(){
     let field=Task::parse();
-    println!("{}",field.title);
+    println!("To do :");
+    println!("task -> {}",field.title);
+    println!("details -> {}",field.discription);
 }
