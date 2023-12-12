@@ -1,8 +1,15 @@
 use clap::Parser;
-use chrono::prelude::*;
+// use chrono::prelude::*;
+use std::fs::File;
+
+use std::io::prelude::*;
+
 fn main() {
-    println!("Hello, world!");
+    
+    welcome_msg();
     add_task();
+    write_task();
+    
 }
 #[derive(Debug)]
 enum Status {
@@ -24,7 +31,7 @@ struct Task{
     discription:String,
 
 }
-fn add_task(){
+fn add_task()->Vec<String>{
     let field=Task::parse();
    
     //struct for one task
@@ -45,8 +52,32 @@ fn add_task(){
     println!("name:=>{}",add_task.name);
     println!("task:=>{}",add_task.task);
     println!("discription:=>{}",add_task.describe);
-    println!("{:?}",add_task.status)
+    println!("{:?}",add_task.status);
+
+    let mut send_data:Vec<String>=Vec::new();
+    send_data.push(add_task.name);
+    send_data.push(add_task.task);
+    send_data.push(add_task.describe);
+
+    return send_data
 
 
+}
+
+
+fn welcome_msg(){
+    let mut file=File::open("welcome.txt").expect("could not open the file!!");
+    let mut welcome=String::new();
+
+    file.read_to_string(&mut welcome).expect("could not read the file to content string");
+    println!("{}",welcome);
+}
+
+fn write_task(){
+    let mut input_data=add_task();
+    let name:&String=&input_data[0];
+
+    let mut task_file=File::create("task.txt").expect("could not create a file");
+    task_file.write_all(b"do this by sunday").expect("could not write the task to the file!!");
 
 }
