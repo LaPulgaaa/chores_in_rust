@@ -1,6 +1,9 @@
 use clap::Parser;
 // use chrono::prelude::*;
 use std::fs::File;
+use std::io::Write;
+
+use serde::{Deserialize,Serialize};
 
 use std::io::prelude::*;
 
@@ -31,16 +34,24 @@ struct Task{
     discription:String,
 
 }
+#[derive(Serialize,Deserialize,Debug)]
+struct Note{
+    name:String,
+    task:String,
+    describe:String
+}
+struct Todo{
+    name:String,
+    task:String,
+    describe:String,
+    status:Status
+}
+
 fn add_task()->Vec<String>{
     let field=Task::parse();
    
     //struct for one task
-    struct Todo{
-        name:String,
-        task:String,
-        describe:String,
-        status:Status
-    }
+    
 
     let add_task=Todo{
         name:field.name,
@@ -74,10 +85,16 @@ fn welcome_msg(){
 }
 
 fn write_task(){
-    let mut input_data=add_task();
-    let name:&String=&input_data[0];
+    
+    
 
     let mut task_file=File::create("task.txt").expect("could not create a file");
-    task_file.write_all(b"do this by sunday").expect("could not write the task to the file!!");
+    // task_file.write_all(name.as_bytes()).expect("could not write the task to the file!!");
+
+    
+    let j_file=serde_json::to_string(&write).unwrap();
+
+    //write a serialized json object 
+    task_file.write_all(j_file.as_bytes()).expect("could not write json string to file");
 
 }
