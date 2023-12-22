@@ -4,14 +4,12 @@ use std::fs::File;
 use std::io::Write;
 
 use serde::{Deserialize,Serialize};
-
 use std::io::prelude::*;
 
 fn main() {
     
     welcome_msg();
     add_task();
-    write_task();
     
 }
 #[derive(Debug)]
@@ -47,7 +45,7 @@ struct Todo{
     status:Status
 }
 
-fn add_task()->Vec<String>{
+fn add_task(){
     let field=Task::parse();
    
     //struct for one task
@@ -60,17 +58,22 @@ fn add_task()->Vec<String>{
         status:Status::Uncomplete(String::from("Not Completed"))
     };
 
-    println!("name:=>{}",add_task.name);
-    println!("task:=>{}",add_task.task);
-    println!("discription:=>{}",add_task.describe);
-    println!("{:?}",add_task.status);
+    let unit_task=Note{
+        name:add_task.name,
+        task:add_task.task,
+        describe:add_task.describe
+    };
+    
 
-    let mut send_data:Vec<String>=Vec::new();
-    send_data.push(add_task.name);
-    send_data.push(add_task.task);
-    send_data.push(add_task.describe);
+    //serializing the struct
+    let unit_task=serde_json::to_string(&unit_task).unwrap();
 
-    return send_data
+    //writing file 
+
+    let mut file=File::create("task.txt").expect("error creating file");
+    file.write(unit_task.as_bytes()).expect("error writing the file");
+
+    
 
 
 }
@@ -84,17 +87,3 @@ fn welcome_msg(){
     println!("{}",welcome);
 }
 
-fn write_task(){
-    
-    
-
-    let mut task_file=File::create("task.txt").expect("could not create a file");
-    // task_file.write_all(name.as_bytes()).expect("could not write the task to the file!!");
-
-    
-    let j_file=serde_json::to_string(&write).unwrap();
-
-    //write a serialized json object 
-    task_file.write_all(j_file.as_bytes()).expect("could not write json string to file");
-
-}
