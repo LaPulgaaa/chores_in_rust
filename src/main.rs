@@ -2,6 +2,7 @@ use clap::Parser;
 // use chrono::prelude::*;
 use std::fs::File;
 use std::io::Write;
+use std::fs::OpenOptions;
 
 use serde::{Deserialize,Serialize};
 use std::io::prelude::*;
@@ -64,16 +65,29 @@ fn add_task(){
         describe:add_task.describe
     };
     
+    //reading the existing task
+    let mut task_file=File::open("task.txt").unwrap();
+
+    let mut old_task=String::new();
+
+    task_file.read_to_string(&mut old_task).unwrap();
+
+    let list:Note=serde_json::from_str(&old_task).expect("error reading the task file");
+
+    println!("Task :{} ,{}",list.task,list.describe);
 
     //serializing the struct
     let unit_task=serde_json::to_string(&unit_task).unwrap();
 
     //writing file 
 
-    let mut file=File::create("task.txt").expect("error creating file");
-    file.write(unit_task.as_bytes()).expect("error writing the file");
+    // let mut file=File::create("task.txt").expect("error creating file");
+    // file.write(unit_task.as_bytes()).expect("error writing the file");
 
-    
+
+    //appending a file
+    let mut file=OpenOptions::new().append(true).open("task.txt").expect("error opening the file");
+    file.write(&unit_task.as_bytes()).expect("error appendint to file");
 
 
 }
@@ -85,5 +99,8 @@ fn welcome_msg(){
 
     file.read_to_string(&mut welcome).expect("could not read the file to content string");
     println!("{}",welcome);
+
+
+    
 }
 
