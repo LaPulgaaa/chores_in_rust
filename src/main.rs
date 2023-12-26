@@ -79,10 +79,7 @@ fn add_task(){
     //serializing the struct
     let unit_task=serde_json::to_string(&unit_task).unwrap();
 
-    //writing file 
-
-    // let mut file=File::create("task.txt").expect("error creating file");
-    // file.write(unit_task.as_bytes()).expect("error writing the file");
+    
 
 
     //appending a file
